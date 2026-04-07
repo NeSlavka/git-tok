@@ -1,10 +1,11 @@
 from settings import length, lang, descr_now
-from projects import names, link, m_description, creators, main_lang
+from projects import names, link, m_description, creators, main_lang, category, category_score, categories_list
 import language
 
 import math
 import time
 import pyfiglet
+import random
 
 current_lang = getattr(language, lang)
 
@@ -26,20 +27,69 @@ def wh_pg():
 	print()
 	print()
 
-	names_now = []
+	# names_now = []
+	fer_st = []
+	
 
-	if pages == max_pages:
-		for i in range(length-more):
-				names_now.append(names[i + pages * length])
-	else:
-		for i in range(length):
-				names_now.append(names[i + pages * length])
+	def correct_random1():
+		rand = names[random.randint(0, len(names)-1)]
+		if category[names.index(rand)] == categories_list[category_score.index(max(category_score))]:
+			names_now.append(rand)
+		else:
+			correct_random1()
+	
+	def correct_random2():
+		unique_sorted = sorted(set(category_score), reverse=True)
+		r_max = unique_sorted[1] if len(unique_sorted) > 1 else None
+
+		rand = names[random.randint(0, len(names)-1)]
+		if category[names.index(rand)] == categories_list[category_score.index(r_max)]:
+			names_now.append(rand)
+		else:
+			correct_random2()
+
+
+	if names_now == []: # Система рекомендаций
+		for i in range(length*4):
+			rand = names[random.randint(0, len(names)-1)]
+			if rand in fer_st:
+				rand = names[random.randint(0, len(names)-1)]
+				fer_st.append(rand)
+				names_now.append(rand)
+			else:
+				fer_st.append(rand)
+				names_now.append(rand)
+	elif pages == len(names_now)/length:
+		for i in range(3):
+			a = 0
+			b = 0
+			for i in range(length):
+				if random.randint(0, 1) == 1 and a < 3:
+					a += 1
+					correct_random1()
+				elif random.randint(0, 1) == 1 and b < 2:
+					b += 1
+					correct_random2()
+				else:
+					rand = names[random.randint(0, len(names)-1)]
+					names_now.append(rand)
+
+
+
+		wh_pg()
+
+	# if pages == max_pages:
+	# 	for i in range(length-more):
+	# 			names_now.append(names[i + pages * length])
+	# else:
+	# 	for i in range(length):
+	# 			names_now.append(names[i + pages * length])
 
 	def how_print():
 		if descr_now:
-			print(f'{i+1}. {names_now[i]} - {m_description[pages*5+i]}')
+			print(f'{i+1}. {names_now[pages*5+i]} - {m_description[pages*5+i]}')
 		else:
-			print(f'{i+1}. {names_now[i]}')
+			print(f'{i+1}. {names_now[pages*5+i]}')
 
 	if pages == max_pages:
 		for i in range(length-more):
@@ -49,7 +99,6 @@ def wh_pg():
 			how_print()
 
 	print()
-	
 	for i in range(3):
 		print(current_lang[i+1])
 
@@ -58,14 +107,23 @@ def wh_pg():
 	answer_page()
 
 
+
 def answer_page():
 	global answer, pages
-
+ 
 
 	if answer == 'f':
 		if pages != max_pages:
+			a = []
 			pages += 1
+
+			for i in range(length):
+				now_ind = names.index(names_now[int(i)])
+				category_score[categories_list.index(category[now_ind])] -= 1
+
+			print(category_score)
 			wh_pg()
+
 		else:
 			print(current_lang[5])
 			answer = input(current_lang[0])
@@ -84,6 +142,9 @@ def answer_page():
 			answer = input(current_lang[0])
 			answer_page()
 		else:
+			now_ind = names.index(names_now[int(answer)-1])
+			category_score[categories_list.index(category[now_ind])] += 10
+
 			description()
 	else:
 		print(current_lang[4])
