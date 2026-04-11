@@ -48,6 +48,14 @@ def wh_pg():
 		else:
 			correct_random2()
 
+	def correct_random3():
+		rand = random.randint(0, len(category)-1)
+		cat_ = categories_list[category.index(min(category_score))]
+
+		if category[rand] == cat_:
+			names_now.append(category[rand])
+		else:
+			correct_random3()
 
 	if names_now == []: # Система рекомендаций
 		for i in range(length*4):
@@ -63,6 +71,7 @@ def wh_pg():
 		for i in range(3):
 			a = 0
 			b = 0
+			c = []
 			for i in range(length):
 				if random.randint(0, 1) == 1 and a < 3:
 					a += 1
@@ -70,6 +79,12 @@ def wh_pg():
 				elif random.randint(0, 1) == 1 and b < 2:
 					b += 1
 					correct_random2()
+				elif random.randint(0, len(names)/2) == 1:
+					correct_random3()
+					# rand = random.randint(0, len(categories_list)-1)
+					# if category_score[rand] == min(category_score):
+					# 	correct_random3()
+
 				else:
 					rand = names[random.randint(0, len(names)-1)]
 					names_now.append(rand)
@@ -121,7 +136,6 @@ def answer_page():
 				now_ind = names.index(names_now[int(i)])
 				category_score[categories_list.index(category[now_ind])] -= 1
 
-			print(category_score)
 			wh_pg()
 
 		else:
@@ -142,7 +156,7 @@ def answer_page():
 			answer = input(current_lang[0])
 			answer_page()
 		else:
-			now_ind = names.index(names_now[int(answer)-1])
+			now_ind = names.index(names_now[pages*5-1+int(answer)])
 			category_score[categories_list.index(category[now_ind])] += 10
 
 			description()
@@ -155,7 +169,7 @@ def answer_page():
 def description():
 	global answer
 
-	now_ind = names.index(names_now[int(answer)-1])
+	now_ind = names.index(names_now[pages*5-1+int(answer)])
 
 	try:
 
