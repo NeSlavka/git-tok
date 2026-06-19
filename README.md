@@ -4,7 +4,7 @@
 
 </div>
 
-![Version](https://img.shields.io/badge/version-0.1.0-red)
+![Version](https://img.shields.io/badge/version-0.6.5-red)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Stars](https://img.shields.io/github/stars/NeSlavka/git-tok)
 
